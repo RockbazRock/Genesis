@@ -96,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
         op.getSettings().setJavaScriptEnabled(true);
         op.setBackgroundColor(Color.TRANSPARENT);
         op.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
-        op.loadData("<html><head>"
+        r="<html><head>"
                 + "<style type=\"text/css\">body{color: #fff; }"
                 + "</style></head>"
                 + "<body>"
-                + "Hi! How can i help?"
-                + "</body></html>","html/text", "utf-8");
+                + "Hi how can i help?"
+                + "</body></html>";
+        op.loadDataWithBaseURL(null, r, "text/html", "utf-8", null);
     }
 
     public void onInputResponse(View view) {
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                         WifiManager wifiManager = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
                         wifiManager.setWifiEnabled(true);
                     r="<html><head>"
-                            + "<style type=\"text/css\">body{color: #fff; background-color: #000;}"
+                            + "<style type=\"text/css\">body{color: #fff; }"
                             + "</style></head>"
                             + "<body>"
                             + "Wifi Enabled!"
