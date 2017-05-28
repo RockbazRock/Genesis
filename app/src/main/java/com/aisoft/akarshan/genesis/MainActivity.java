@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     String botname = "genesis";
     Chat chatSession;
     Bot bot;
-    String baseDir, r;
+    String baseDir, r, nohtmlstr;
     TextToSpeech ts;
     protected static final int RESULT_SPEECH = 1;
 
@@ -92,6 +93,15 @@ public class MainActivity extends AppCompatActivity {
         //path = baseDir;
         bot = new Bot(botname, baseDir);
         chatSession = new Chat(bot);
+        op.getSettings().setJavaScriptEnabled(true);
+        op.setBackgroundColor(Color.TRANSPARENT);
+        op.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null);
+        op.loadData("<html><head>"
+                + "<style type=\"text/css\">body{color: #fff; }"
+                + "</style></head>"
+                + "<body>"
+                + "Hi! How can i help?"
+                + "</body></html>","html/text", "utf-8");
     }
 
     public void onInputResponse(View view) {
@@ -131,33 +141,65 @@ public class MainActivity extends AppCompatActivity {
                     if(i.toLowerCase().contains("wifi") && (i.toLowerCase().contains("on")|| i.toLowerCase().contains("enable"))) {
                         WifiManager wifiManager = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
                         wifiManager.setWifiEnabled(true);
-                    r="Wifi enabled";
+                    r="<html><head>"
+                            + "<style type=\"text/css\">body{color: #fff; background-color: #000;}"
+                            + "</style></head>"
+                            + "<body>"
+                            + "Wifi Enabled!"
+                            + "</body></html>";
+                        ts.speak("Wifi enabled",TextToSpeech.QUEUE_FLUSH,null,null);
                     }
                     else if(i.toLowerCase().contains("wifi") && (i.toLowerCase().contains("off")|| i.toLowerCase().contains("disable"))){
                         WifiManager wifiManager = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
                         wifiManager.setWifiEnabled(false);
-                        r="Wifi disabled";
+                        r="<html><head>"
+                                + "<style type=\"text/css\">body{color: #fff; }"
+                                + "</style></head>"
+                                + "<body>"
+                                + "Wifi disabled!"
+                                + "</body></html>";
+                        ts.speak("Wifi disabled",TextToSpeech.QUEUE_FLUSH,null,null);
                     }
                     else if(i.toLowerCase().contains("bluetooth") && (i.toLowerCase().contains("on")|| i.toLowerCase().contains("enable"))) {
                         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                         if(!mBluetoothAdapter.isEnabled()) mBluetoothAdapter.enable();
-                        r= "Bluetooth enabled";
+                        r= "<html><head>"
+                                + "<style type=\"text/css\">body{color: #fff; }"
+                                + "</style></head>"
+                                + "<body>"
+                                + "Bluetooth enabled"
+                                + "</body></html>";
+                        ts.speak("Bluetooth enabled",TextToSpeech.QUEUE_FLUSH,null,null);
                     }
                     else if(i.toLowerCase().contains("bluetooth") && (i.toLowerCase().contains("off")|| i.toLowerCase().contains("disable"))) {
                         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                         if(mBluetoothAdapter.isEnabled()) mBluetoothAdapter.disable();
-                        r="Bluetooth disabled";
+                        r="<html><head>"
+                                + "<style type=\"text/css\">body{color: #fff;}"
+                                + "</style></head>"
+                                + "<body>"
+                                + "Bluetooth Disabled"
+                                + "</body></html>";
+                        ts.speak("Bluetooth disabled",TextToSpeech.QUEUE_FLUSH,null,null);
                     }
                     else
 
-                    r = chatSession.multisentenceRespond(i);
+                     nohtmlstr = chatSession.multisentenceRespond(i);
+                    r="<html><head>"
+                            + "<style type=\"text/css\">body{color: #fff; }"
+                            + "</style></head>"
+                            + "<body>"
+                            + nohtmlstr
+                            + "</body></html>";
 
-                    op.getSettings().setJavaScriptEnabled(true);
+
+
+
 
                     //Todo : find substring in ip in a string r
 
                     op.loadDataWithBaseURL(null, r, "text/html", "utf-8", null);
-                    ts.speak(stripHtml(r), TextToSpeech.QUEUE_FLUSH, null, null);
+                    ts.speak(stripHtml(nohtmlstr), TextToSpeech.QUEUE_FLUSH, null, null);
                     if (!(pullLinks(stripHtml(r)).equals(""))) {
 
                         op.setWebViewClient(new WebViewClient());
@@ -189,5 +231,17 @@ public class MainActivity extends AppCompatActivity {
             links=urlStr;
         }
         return links;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ts.stop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ts.shutdown();
     }
 }
