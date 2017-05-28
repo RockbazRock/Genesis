@@ -8,10 +8,10 @@ package com.aisoft.akarshan.genesis.brain;
  */
 public class MagicStrings {
     // General global strings
-    public static String program_name_version = "Program AB 0.0.6.26 beta -- AI Foundation Reference AIML 2.1 implementation";
+    public static String program_name_version = "Genesis Artificial Intelligent Assistant based on AIML 3.0";
     public static String comment = "Added repetition detection.";
     public static String aimlif_split_char = ",";
-    public static String default_bot = "alice2";
+    public static String default_bot = "Genesis";
     public static String default_language = "EN";
     public static String aimlif_split_char_name = "\\#Comma";
     public static String aimlif_file_suffix = ".csv";
@@ -52,7 +52,7 @@ public class MagicStrings {
     public static String bad_javascript = "JSFAILED";
     public static String js_enabled = "true";
     public static String unknown_history_item = "unknown";
-    public static String default_bot_response = "I have no answer for that.";
+    public static String default_bot_response = "Did not understand.";
     public static String error_bot_response = "Something is wrong with my brain.";
     public static String schedule_error = "I'm unable to schedule that event.";
     public static String system_failed = "Failed to execute system command.";
